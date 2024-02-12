@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 
 class SurrealDB {
@@ -16,11 +14,7 @@ class SurrealDB {
   }
 
   Future<dynamic> query(String query, {Map<String, dynamic> params = const {}}) async {
-    final Response response = await _client.post(
-      '/sql',
-      data: query,
-      queryParameters: params.map((key, value) => MapEntry(key, jsonEncode(value))),
-    );
+    final Response response = await _client.post('/sql', data: query, queryParameters: params);
 
     // Process response
 
