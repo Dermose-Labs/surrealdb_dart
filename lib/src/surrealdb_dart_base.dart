@@ -13,11 +13,14 @@ class SurrealDB {
     _client.options.headers['DB'] = database;
   }
 
-  Future<dynamic> query(String query, {Map<String, dynamic> params = const {}}) async {
-    final Response response = await _client.post('/sql', data: query, queryParameters: params);
+  Future<dynamic> query(String query) async {
+    final Response response = await _client.post('/sql', data: query);
 
     // Process response
+    // - Do error checking
+    // - Parse response
+    // - Return data
 
-    return response;
+    return response.data;
   }
 }
