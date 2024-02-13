@@ -1,30 +1,57 @@
-import 'package:dio/dio.dart';
+import 'dart:convert';
+import "package:http/http.dart" as http;
 
 class SurrealDB {
-  final Dio _client = Dio();
+  final String baseUrl;
 
-  SurrealDB(String url) {
-    _client.options.baseUrl = url;
-    _client.options.headers['Accept'] = 'application/json';
-  }
+  String? namespace;
+  String? database;
+
+  String? autherizationToken;
+
+  SurrealDB(this.baseUrl);
 
   void use({required String namespace, required String database}) {
-    _client.options.headers['NS'] = namespace;
-    _client.options.headers['DB'] = database;
+    namespace = namespace;
+    database = database;
   }
 
   void authenticate(String token) {
-    _client.options.headers['Authorization'] = 'Bearer $token';
+    autherizationToken = 'Bearer $token';
   }
 
   Future<dynamic> query(String query) async {
-    final Response response = await _client.post('/sql', data: query);
+    try {
+      final http.Response response = await http.post(
+        Uri.parse("$baseUrl/sql"),
+        body: utf8.encode(query),
+        headers: {
+          'Accept': 'application/json',
+          'NS': namespace ?? '',
+          'DB': database ?? '',
+          'Authorization': autherizationToken ?? '',
+        },
+      );
 
-    // Process response
-    // - Do error checking
-    // - Parse response
-    // - Return data
+      return jsonDecode(response.body);
 
-    return response.data;
+      // final Response response = await _client.post(
+      //   '/sql',
+      //   data: utf8.encode(query),
+      //   options: Options(
+      //     contentType: 'text/plain',
+      //     headers: {'Accept': 'application/json'},
+      //   ),
+      // );
+
+      // // Process response
+      // // - Do error checking
+      // // - Parse response
+      // // - Return data
+
+      // return response.data;
+    } catch (e) {
+      print(e);
+    }
   }
 }
