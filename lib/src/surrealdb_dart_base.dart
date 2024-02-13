@@ -13,6 +13,10 @@ class SurrealDB {
     _client.options.headers['DB'] = database;
   }
 
+  void authenticate(String token) {
+    _client.options.headers['Authorization'] = 'Bearer $token';
+  }
+
   Future<dynamic> query(String query) async {
     final Response response = await _client.post('/sql', data: query);
 
