@@ -15,8 +15,17 @@ class SurrealDB {
     db = database;
   }
 
-  void authenticate(String token) {
+  Future<void> authenticate(String token) async {
+    final client = internal.SurrealDB(baseUrl);
+
+    client.connect();
+    await client.wait();
+
+    await client.authenticate(token);
+
     autherizationToken = 'Bearer $token';
+
+    client.close();
   }
 
   Future<internal.SurrealDB> _intializeClient() async {
