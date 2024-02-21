@@ -23,7 +23,7 @@ class SurrealDB {
 
     await client.authenticate(token);
 
-    autherizationToken = 'Bearer $token';
+    autherizationToken = token;
 
     client.close();
   }
@@ -34,8 +34,6 @@ class SurrealDB {
     client.connect();
 
     await client.wait();
-
-    print('Connecting to namespace: $ns, database: $db');
 
     await client.use(ns!, db!);
 
